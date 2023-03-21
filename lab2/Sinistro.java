@@ -4,6 +4,7 @@ public class Sinistro {
     private int id;
     private String data;
     private String endereco;
+
     public int getId() {
         return id;
     }
@@ -34,4 +35,8 @@ public class Sinistro {
         this.endereco = endereco;
     }
 
+    public String toString(){
+        return "Id: " + getId() + "\nData: " + getData()
+                + "\nEndereco: " + getEndereco() + "\n";
+    }
 }

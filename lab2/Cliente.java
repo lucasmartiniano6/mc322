@@ -4,6 +4,7 @@ public class Cliente {
     private String dataNascimento;
     private int idade;
     private String endereco;
+
     public String getNome() {
         return nome;
     }
@@ -34,6 +35,7 @@ public class Cliente {
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
+    
     public Cliente(String nome, String cpf, String dataNascimento, int idade, String endereco) {
         this.nome = nome;
         this.cpf = cpf;
