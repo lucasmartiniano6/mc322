@@ -2,14 +2,22 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ClientePF extends Cliente{
-    private String CPF;
+    private final String CPF;
+    private String genero;
+    private Date dataLicenca;    
+    private String educacao;
     private Date dataNascimento;    
+    private String classeEconomica;
 
-    public ClientePF(String nome, String endereco, Date dataLicenca, String educacao, String genero,
-            String classeEconomica, ArrayList<Veiculo> listaVeiculos, String CPF, Date dataNascimento) {
-        super(nome, endereco, dataLicenca, educacao, genero, classeEconomica, listaVeiculos);
-        this.CPF = CPF;
+    public ClientePF(String nome, String endereco, ArrayList<Veiculo> listaVeiculos, String cpf, String genero,
+            Date dataLicenca, String educacao, Date dataNascimento, String classeEconomica) {
+        super(nome, endereco, listaVeiculos);
+        this.CPF = cpf;
+        this.genero = genero;
+        this.dataLicenca = dataLicenca;
+        this.educacao = educacao;
         this.dataNascimento = dataNascimento;
+        this.classeEconomica = classeEconomica;
     }
 
     public boolean validarCPF(String cpf) {
@@ -52,8 +60,28 @@ public class ClientePF extends Cliente{
         return CPF;
     }
 
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public Date getDataLicenca() {
+        return dataLicenca;
+    }
+
+    public void setDataLicenca(Date dataLicenca) {
+        this.dataLicenca = dataLicenca;
+    }
+
+    public String getEducacao() {
+        return educacao;
+    }
+
+    public void setEducacao(String educacao) {
+        this.educacao = educacao;
     }
 
     public Date getDataNascimento() {
@@ -64,9 +92,17 @@ public class ClientePF extends Cliente{
         this.dataNascimento = dataNascimento;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + "\n" + "ClientePF [CPF=" + CPF + ", dataNascimento=" + dataNascimento + "]";
+    public String getClasseEconomica() {
+        return classeEconomica;
     }
 
+    public void setClasseEconomica(String classeEconomica) {
+        this.classeEconomica = classeEconomica;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +"\n"+ "ClientePF [CPF=" + CPF + ", genero=" + genero + ", dataLicenca=" + dataLicenca + ", educacao="
+                + educacao + ", dataNascimento=" + dataNascimento + ", classeEconomica=" + classeEconomica + "]";
+    }
 }

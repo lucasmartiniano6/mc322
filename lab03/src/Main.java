@@ -4,16 +4,18 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {        
-        String pattern = "MM-dd-yyyy";
+        String pattern = "dd/MM/yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        Date date;
         try {
-            date = simpleDateFormat.parse("12-01-2018");
-            ClientePF c = new ClientePF("lucas", "gaspar f", date, "escola", "genero", "baicxal", null, "074.581.234-19", date);
+            Date date = simpleDateFormat.parse("17/06/2018");
+            ClientePJ c = new ClientePJ(pattern, pattern, null, "54.623.001/0001-11", date);
             System.out.println(c);
-            System.out.println(c.validarCPF(c.getCPF()));
+            System.out.println(c.validarCNPJ(c.getCNPJ()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        Sinistro s = new Sinistro(pattern, pattern, null, null, null);
+        System.out.println(s);
     }
 }
