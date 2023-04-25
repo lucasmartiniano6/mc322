@@ -19,6 +19,7 @@ public class Seguradora {
     }
 
     public boolean cadastrarCliente(Cliente cliente){
+        // Adiciona Cliente na lista de clientes da seguradora
         for(Cliente c: listaClientes){
             if(c.equals(cliente))
                 return false;
@@ -28,6 +29,7 @@ public class Seguradora {
     }
     
     public boolean removerCliente(String cliente_str){
+        // Remover Cliente da lista de clientes da seguradora
         // cliente_str pode ser CPF ou CNPJ
         for(Cliente c: listaClientes){
             if(c instanceof ClientePF){
@@ -49,6 +51,7 @@ public class Seguradora {
     }
     
     public boolean removerSinistro(Cliente cliente){
+        // Remover Sinistro da lista de sinistros da seguradora
         for(Sinistro s: listaSinistros){
             if(s.getCliente().equals(cliente)){
                 listaSinistros.remove(s);
@@ -59,6 +62,7 @@ public class Seguradora {
     }
 
     public void listarClientes(String tipoCliente){
+        // tipoCliente pode ser "PF", "PJ" ou todos
         if(tipoCliente.equals("PF")){
             for(Cliente c: listaClientes){
                 if(c instanceof ClientePF)

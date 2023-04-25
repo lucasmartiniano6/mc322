@@ -12,6 +12,7 @@ public class Main {
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 
+        // Recebe os dados do cliente
         System.out.println("Digite o nome do cliente: ");
         String nome = sc.nextLine();
         System.out.println("Digite o endereço do cliente: ");
@@ -31,6 +32,7 @@ public class Main {
         String classeEconomica = sc.nextLine();
 
         ClientePF cliente_pf = new ClientePF(nome, endereco, listaVeiculos, cpf, genero, dataLicenca, educacao, dataNascimento, classeEconomica);
+        
         if(!cliente_pf.validarCPF(cpf)){
             System.out.println("CPF inválido!");
             System.exit(0);
