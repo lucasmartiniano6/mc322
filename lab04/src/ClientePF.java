@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.event.ListDataEvent;
-
 public class ClientePF extends Cliente{
     private final String CPF;
     private String genero;
@@ -23,7 +21,17 @@ public class ClientePF extends Cliente{
     }
 
     public double calculaScore(){
-        return CalcSeguro.VALOR_BASE.num * getListaVeiculos().size();
+        // calculate age based on date of birth
+        int age = (int) ((new Date().getTime() - dataNascimento.getTime()) / 86400000 / 365.25);
+        double fator_idade = 1;
+        if(age >= 18 && age < 30)
+            fator_idade = CalcSeguro.FATOR_18_30.num; 
+        else if(age >= 30 && age < 60)
+            fator_idade = CalcSeguro.FATOR_30_60.num;
+        else if(age >= 60 && age < 90)
+            fator_idade = CalcSeguro.FATOR_60_90.num;
+
+        return CalcSeguro.VALOR_BASE.num * getListaVeiculos().size() * fator_idade;
     }
 
     public String getCPF() {

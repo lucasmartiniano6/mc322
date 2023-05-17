@@ -115,6 +115,26 @@ public class Seguradora {
         }
     }
     
+    public void calcularPrecoSeguroCliente(Cliente cliente){
+        int quantidade_de_sinistros = 0;
+        for(Sinistro s: listaSinistros){
+            if(s.getCliente().equals(cliente)){
+                quantidade_de_sinistros++;
+            }
+        }
+        double valor_seguro = cliente.calculaScore() * (1 + quantidade_de_sinistros );
+        cliente.setValorSeguro(valor_seguro);
+    }
+    
+    public double calcularReceita(){
+        double receita = 0;
+        for(Cliente c: listaClientes){
+            calcularPrecoSeguroCliente(c);
+            receita += c.getValorSeguro();
+        }
+        return receita;
+    }
+    
     public String getNome() {
         return nome;
     }

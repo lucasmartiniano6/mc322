@@ -4,6 +4,7 @@ public class Cliente {
     private String nome;
     private String endereco;
     private ArrayList<Veiculo> listaVeiculos;
+    private double valorSeguro;
 
     public Cliente(String nome, String endereco, ArrayList<Veiculo> listaVeiculos) {
         this.nome = nome;
@@ -32,6 +33,12 @@ public class Cliente {
     }
     public void setListaVeiculos(ArrayList<Veiculo> listaVeiculos) {
         this.listaVeiculos = listaVeiculos;
+    }
+    public double getValorSeguro() {
+        return valorSeguro;
+    }
+    public void setValorSeguro(double valorSeguro) {
+        this.valorSeguro = valorSeguro;
     }
     @Override
     public String toString() {
