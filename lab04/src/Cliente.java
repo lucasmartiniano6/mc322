@@ -10,6 +10,11 @@ public class Cliente {
         this.endereco = endereco;
         this.listaVeiculos = listaVeiculos;
     }
+
+    public double calculaScore(){
+        return 1;
+    }
+
     public String getNome() {
         return nome;
     }
