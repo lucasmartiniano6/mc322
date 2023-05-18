@@ -56,7 +56,9 @@ public class Main {
 	}
 	
 	//executar opções do menu externo
-	private static void executarOpcaoMenuExterno(MenuOpcoes op) {
+	private static void executarOpcaoMenuExterno(MenuOpcoes op, ArrayList<Seguradora> listaSeguradoras) {
+		Scanner scanner = new Scanner(System.in);
+		String nomeSeguradora;
 		switch(op) {
 			case CADASTROS:
 			case LISTAR:
@@ -68,9 +70,41 @@ public class Main {
 				break;
 			case TRANSFERIR_SEGURO:
 				System.out.println("Executar metodo tranferir seguro");
+				System.out.println("Digite o nome da seguradora: ");
+				nomeSeguradora = scanner.nextLine();
+				System.out.println("Nome do cliente de origem: ");
+				String nomeClienteOrigem = scanner.nextLine();
+				while(!Validacao.validaNome(nomeClienteOrigem)){
+					System.out.println("Nome inválido, digite novamente: ");
+					nomeClienteOrigem = scanner.nextLine();
+				}
+				System.out.println("Nome do cliente de destino: ");
+				String nomeClienteDestino = scanner.nextLine();
+				while(!Validacao.validaNome(nomeClienteDestino)){
+					System.out.println("Nome inválido, digite novamente: ");
+					nomeClienteDestino = scanner.nextLine();
+				}
+				for(Seguradora s: listaSeguradoras){
+					System.out.println(s.getNome());
+					if((s.getNome()).equals(nomeSeguradora)){
+						s.transferirSeguro(nomeClienteOrigem, nomeClienteDestino);
+						break;
+					}
+				}	
+				System.out.println("Seguradora [" + nomeSeguradora + "] não encontrada");
 				break;
 			case CALCULAR_RECEITA:
 				System.out.println("Executar metodo calcular receita");
+				System.out.println("Digite o nome da seguradora: ");
+				nomeSeguradora = scanner.nextLine();
+				for(Seguradora s: listaSeguradoras){
+					if(s.getNome().equals(nomeSeguradora)){
+						System.out.println("Receita da seguradora " + nomeSeguradora + ": " + s.calcularReceita());
+						break;
+					}
+				}
+				// se não achou o nome
+				System.out.println("Seguradora não encontrada");
 				break;
 			case SAIR:
 		}
@@ -121,12 +155,12 @@ public class Main {
 	}
 	
 	//executa o menu externo: exibição do menu, leitura da opção e execução da opção
-	public void iniciarMenu(){
+	public static void iniciarMenu(ArrayList<Seguradora> listaSeguradoras){
 		MenuOpcoes op;
 		do {
 			exibirMenuExterno();
 			op = lerOpcaoMenuExterno();
-			executarOpcaoMenuExterno(op);
+			executarOpcaoMenuExterno(op, listaSeguradoras);
 		}while(op != MenuOpcoes.SAIR);
 		System.out.println("Saiu do sistema");
 	}
@@ -146,7 +180,7 @@ public class Main {
 		ArrayList<Veiculo> listaVeiculos2 = new ArrayList<Veiculo>();
 		listaVeiculos2.add(veiculo2);
 		Date dataFundacao = sdf.parse("01/01/2000");
-		ClientePJ clientePJ1 = new ClientePJ("Empresa 1", "Av 2", listaVeiculos2, "81.788.124/0001-85", dataFundacao, 15);
+		ClientePJ clientePJ1 = new ClientePJ("Empresa", "Av 2", listaVeiculos2, "81.788.124/0001-85", dataFundacao, 15);
 		// Instanciar Seguradoras
 		ArrayList<Seguradora> listaSeguradoras = new ArrayList<Seguradora>();
 		ArrayList<Sinistro> listaSinistros1 = new ArrayList<Sinistro>();
@@ -155,12 +189,12 @@ public class Main {
 		listaSeguradoras.add(seguradora1);
 		// Cadastrar clientes na primeira seguradora
 		if(listaSeguradoras.get(0).cadastrarCliente(clientePF1))
-			System.out.println("Cliente cadastrado com sucesso");
+			System.out.println("Cliente cadastrado");
 		else
 			System.out.println("Cliente já cadastrado");
 
 		if(listaSeguradoras.get(0).cadastrarCliente(clientePJ1))
-			System.out.println("Cliente cadastrado com sucesso");
+			System.out.println("Cliente cadastrado");
 		else
 			System.out.println("Cliente já cadastrado");
 		// Gerar sinistros
@@ -170,7 +204,16 @@ public class Main {
 		listaSeguradoras.get(0).listarClientes("PF");
 		listaSeguradoras.get(0).vizualizarSinistro("074.581.234-19");
 		listaSeguradoras.get(0).listarSinistros();
-		System.out.println("Receita " + listaSeguradoras.get(0).calcularReceita());
+		// Atualizar e calcular preco seguro
+		for(Seguradora seg: listaSeguradoras){
+			for(Cliente cliente: seg.getListaClientes()){
+				seg.calcularPrecoSeguroCliente(cliente);
+			}
+			System.out.println(seg.getNome() + " tem como receita: " + seg.calcularReceita());
+		}
+
+		// Iniciar menu de operacoes
+		iniciarMenu(listaSeguradoras);
 	}
 
 }

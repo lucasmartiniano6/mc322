@@ -50,6 +50,17 @@ public class Seguradora {
         return false;
     }
     
+    public boolean removerCliente(Cliente cliente){
+        for(Cliente c: listaClientes){
+            if(c.equals(cliente)){
+                listaClientes.remove(c);
+                removerSinistro(c);
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean removerSinistro(Cliente cliente){
         // Remover Sinistro da lista de sinistros da seguradora
         for(Sinistro s: listaSinistros){
@@ -95,13 +106,13 @@ public class Seguradora {
         for(Sinistro s: listaSinistros){
             if(s.getCliente() instanceof ClientePF){
                 if(((ClientePF) s.getCliente()).getCPF().equals(cliente_str)){
-                    System.out.println("Sinistro ID " + s.getID());
+                    System.out.println(s);
                     return true;
                 }
             }
             else if(s.getCliente() instanceof ClientePJ){
                 if(((ClientePJ) s.getCliente()).getCNPJ().equals(cliente_str)){
-                    System.out.println("Sinistro ID " + s.getID());
+                    System.out.println(s);
                     return true;
                 }
             }
@@ -111,7 +122,7 @@ public class Seguradora {
 
     public void listarSinistros(){
         for(Sinistro s: listaSinistros){
-            System.out.println("Sinistro ID " + s.getID());
+            System.out.println(s);
         }
     }
     
@@ -133,6 +144,18 @@ public class Seguradora {
             receita += c.getValorSeguro();
         }
         return receita;
+    }
+    
+    public void transferirSeguro(String nomeOrigem, String nomeDestino){
+        Cliente origem = null;
+        Cliente destino = null;
+        for(Cliente c: listaClientes){
+            if(c.getNome().equals(nomeOrigem)) origem = c;
+            else if(c.getNome().equals(nomeDestino)) destino = c;
+        }
+        destino.setListaVeiculos(origem.getListaVeiculos());
+        calcularPrecoSeguroCliente(destino);
+        removerCliente(origem);
     }
     
     public String getNome() {

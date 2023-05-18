@@ -1,7 +1,7 @@
 public class Validacao {
     public static boolean validaNome(String nome_){
         String nome = nome_.replaceAll("[^A-Z, ^a-z, ^\b]", "");
-        if(nome == nome_) return true;
+        if(nome.equals(nome_)) return true;
         else return false;
     }
 

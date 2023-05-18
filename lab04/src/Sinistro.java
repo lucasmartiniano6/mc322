@@ -82,7 +82,7 @@ public class Sinistro {
 
     @Override
     public String toString() {
-        return "Sinistro [ID=" + ID + ", data=" + data + ", endereco=" + endereco + ", seguradora=" + seguradora
-                + ", veiculo=" + veiculo + ", cliente=" + cliente + "]";
+        return "Sinistro [ID=" + ID + ", data=" + data + ", endereco=" + endereco + ", seguradora=" + seguradora.getNome()
+                + ", veiculo=" + veiculo.getPlaca() + ", cliente=" + cliente.getNome() + "]";
     }
 }
