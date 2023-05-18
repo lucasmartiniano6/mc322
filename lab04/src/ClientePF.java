@@ -21,7 +21,6 @@ public class ClientePF extends Cliente{
     }
 
     public double calculaScore(){
-        // calculate age based on date of birth
         int age = (int) ((new Date().getTime() - dataNascimento.getTime()) / 86400000 / 365.25);
         double fator_idade = 1;
         if(age >= 18 && age < 30)

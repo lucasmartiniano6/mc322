@@ -1,3 +1,7 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -117,7 +121,7 @@ public class Main {
 	}
 	
 	//executa o menu externo: exibição do menu, leitura da opção e execução da opção
-	public static void main(String[] args) {
+	public void iniciarMenu(){
 		MenuOpcoes op;
 		do {
 			exibirMenuExterno();
@@ -125,6 +129,48 @@ public class Main {
 			executarOpcaoMenuExterno(op);
 		}while(op != MenuOpcoes.SAIR);
 		System.out.println("Saiu do sistema");
+	}
+
+	public static void main(String[] args) throws ParseException{
+		// Instanciar 2 veículos
+		Veiculo veiculo1 = new Veiculo("ABC-1234", "Fiat", "Uno", 2010);
+		Veiculo veiculo2 = new Veiculo("ABC-4321", "Ford", "Ka", 2012);
+		// Instanciar ClientePF
+		ArrayList<Veiculo> listaVeiculos1 = new ArrayList<Veiculo>();
+		listaVeiculos1.add(veiculo1);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date dataLicenca = sdf.parse("01/01/2010");
+		Date dataNascimento = sdf.parse("15/06/2004");
+		ClientePF clientePF1 = new ClientePF("Joao", "Av 1", listaVeiculos1, "074.581.234-19", "M", dataLicenca, "Superior", dataNascimento, "A");
+		// Instanciar ClientePJ
+		ArrayList<Veiculo> listaVeiculos2 = new ArrayList<Veiculo>();
+		listaVeiculos2.add(veiculo2);
+		Date dataFundacao = sdf.parse("01/01/2000");
+		ClientePJ clientePJ1 = new ClientePJ("Empresa 1", "Av 2", listaVeiculos2, "81.788.124/0001-85", dataFundacao, 15);
+		// Instanciar Seguradoras
+		ArrayList<Seguradora> listaSeguradoras = new ArrayList<Seguradora>();
+		ArrayList<Sinistro> listaSinistros1 = new ArrayList<Sinistro>();
+		ArrayList<Cliente> listaClientes1 = new ArrayList<Cliente>();
+		Seguradora seguradora1 = new Seguradora("Seguradora 1", "1111-1111", "@seg1.com", "Av 3", listaSinistros1, listaClientes1);
+		listaSeguradoras.add(seguradora1);
+		// Cadastrar clientes na primeira seguradora
+		if(listaSeguradoras.get(0).cadastrarCliente(clientePF1))
+			System.out.println("Cliente cadastrado com sucesso");
+		else
+			System.out.println("Cliente já cadastrado");
+
+		if(listaSeguradoras.get(0).cadastrarCliente(clientePJ1))
+			System.out.println("Cliente cadastrado com sucesso");
+		else
+			System.out.println("Cliente já cadastrado");
+		// Gerar sinistros
+		listaSeguradoras.get(0).gerarSinistro("18/05/2023", "Av. Maxwell", listaSeguradoras.get(0), veiculo1, clientePF1);
+		listaSeguradoras.get(0).gerarSinistro("15/05/2023", "Av. Tartaruga", listaSeguradoras.get(0), veiculo2, clientePJ1);
+		// Chamar metodos da Seguradora
+		listaSeguradoras.get(0).listarClientes("PF");
+		listaSeguradoras.get(0).vizualizarSinistro("074.581.234-19");
+		listaSeguradoras.get(0).listarSinistros();
+		System.out.println("Receita " + listaSeguradoras.get(0).calcularReceita());
 	}
 
 }

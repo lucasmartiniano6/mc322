@@ -82,9 +82,9 @@ public class Seguradora {
         }
     }
 
-    public boolean gerarSinistro(String data, String endereco){
+    public boolean gerarSinistro(String data, String endereco, Seguradora seguradora, Veiculo veiculo, Cliente cliente){
         // criar objeto sinistro
-        Sinistro s = new Sinistro(data, endereco, null, null, null);
+        Sinistro s = new Sinistro(data, endereco, seguradora, veiculo, cliente);
         // cadastrar sinistro
         listaSinistros.add(s);
         return true;
@@ -95,13 +95,13 @@ public class Seguradora {
         for(Sinistro s: listaSinistros){
             if(s.getCliente() instanceof ClientePF){
                 if(((ClientePF) s.getCliente()).getCPF().equals(cliente_str)){
-                    System.out.println(s);
+                    System.out.println("Sinistro ID " + s.getID());
                     return true;
                 }
             }
             else if(s.getCliente() instanceof ClientePJ){
                 if(((ClientePJ) s.getCliente()).getCNPJ().equals(cliente_str)){
-                    System.out.println(s);
+                    System.out.println("Sinistro ID " + s.getID());
                     return true;
                 }
             }
@@ -111,7 +111,7 @@ public class Seguradora {
 
     public void listarSinistros(){
         for(Sinistro s: listaSinistros){
-            System.out.println(s);
+            System.out.println("Sinistro ID " + s.getID());
         }
     }
     

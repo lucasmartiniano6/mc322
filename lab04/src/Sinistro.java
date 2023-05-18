@@ -79,10 +79,10 @@ public class Sinistro {
         this.cliente = cliente;
     }
 
+
     @Override
     public String toString() {
         return "Sinistro [ID=" + ID + ", data=" + data + ", endereco=" + endereco + ", seguradora=" + seguradora
                 + ", veiculo=" + veiculo + ", cliente=" + cliente + "]";
     }
-
 }
