@@ -125,6 +125,15 @@ public class Seguradora {
             System.out.println(s);
         }
     }
+
+    public void listarVeiculos(){
+        for(Cliente c: listaClientes){
+            System.out.println("Cliente " + c.getNome() + ": ");
+            for(Veiculo v: c.getListaVeiculos()){
+                System.out.println(v);
+            }
+        }
+    }
     
     public void calcularPrecoSeguroCliente(Cliente cliente){
         int quantidade_de_sinistros = 0;
@@ -146,7 +155,7 @@ public class Seguradora {
         return receita;
     }
     
-    public void transferirSeguro(String nomeOrigem, String nomeDestino){
+    public boolean transferirSeguro(String nomeOrigem, String nomeDestino){
         Cliente origem = null;
         Cliente destino = null;
         for(Cliente c: listaClientes){
@@ -156,6 +165,7 @@ public class Seguradora {
         destino.setListaVeiculos(origem.getListaVeiculos());
         calcularPrecoSeguroCliente(destino);
         removerCliente(origem);
+        return true;
     }
     
     public String getNome() {

@@ -58,20 +58,55 @@ public class Main {
 	//executar opções do menu externo
 	private static void executarOpcaoMenuExterno(MenuOpcoes op, ArrayList<Seguradora> listaSeguradoras) {
 		Scanner scanner = new Scanner(System.in);
+		Seguradora seguradora = null;
 		String nomeSeguradora;
+		do{
+			System.out.println("Digite o nome da seguradora: ");
+			nomeSeguradora = scanner.nextLine();
+			for(Seguradora s: listaSeguradoras)
+				if((s.getNome()).equals(nomeSeguradora))
+					seguradora = s;
+			if(seguradora==null)
+				System.out.println("Seguradora [" + nomeSeguradora + "] não encontrada");
+		}while(seguradora == null);
+
 		switch(op) {
 			case CADASTROS:
 			case LISTAR:
 			case EXCLUIR:
-				executarSubmenu(op);
+				executarSubmenu(op, seguradora);
 				break;
 			case GERAR_SINISTRO:
-				System.out.println("Executar metodo gerar Sinistro");
+				System.out.println("Data do sinistro: ");
+			 	String dataSinistro = scanner.nextLine();
+				System.out.println("Endereco do sinistro: ");
+				String enderecoSinistro = scanner.nextLine();
+				System.out.println("Placa do veiculo: ");
+				String placaVeiculo = scanner.nextLine();
+				System.out.println("Nome do cliente: ");
+				String nomeCliente = scanner.nextLine();
+				while(!Validacao.validaNome(nomeCliente)){
+					System.out.println("Nome inválido, digite novamente: ");
+					nomeCliente = scanner.nextLine();
+				}
+				boolean ok = false;
+				for(Cliente c: seguradora.getListaClientes()){
+					if((c.getNome()).equals(nomeCliente)){
+						for(Veiculo v: c.getListaVeiculos()){
+							if((v.getPlaca()).equals(placaVeiculo)){
+								seguradora.gerarSinistro(dataSinistro, enderecoSinistro, seguradora, v, c);
+								System.out.println("Sinistro gerado!");
+								ok = true;
+								break;
+							}
+						}
+					}
+				}
+				if(!ok){
+					System.out.println("Erro ao gerar sinistro");
+				}
 				break;
 			case TRANSFERIR_SEGURO:
-				System.out.println("Executar metodo tranferir seguro");
-				System.out.println("Digite o nome da seguradora: ");
-				nomeSeguradora = scanner.nextLine();
 				System.out.println("Nome do cliente de origem: ");
 				String nomeClienteOrigem = scanner.nextLine();
 				while(!Validacao.validaNome(nomeClienteOrigem)){
@@ -84,33 +119,23 @@ public class Main {
 					System.out.println("Nome inválido, digite novamente: ");
 					nomeClienteDestino = scanner.nextLine();
 				}
-				for(Seguradora s: listaSeguradoras){
-					System.out.println(s.getNome());
-					if((s.getNome()).equals(nomeSeguradora)){
-						s.transferirSeguro(nomeClienteOrigem, nomeClienteDestino);
-						break;
-					}
-				}	
-				System.out.println("Seguradora [" + nomeSeguradora + "] não encontrada");
-				break;
-			case CALCULAR_RECEITA:
-				System.out.println("Executar metodo calcular receita");
-				System.out.println("Digite o nome da seguradora: ");
-				nomeSeguradora = scanner.nextLine();
-				for(Seguradora s: listaSeguradoras){
-					if(s.getNome().equals(nomeSeguradora)){
-						System.out.println("Receita da seguradora " + nomeSeguradora + ": " + s.calcularReceita());
+				if((seguradora.getNome()).equals(nomeSeguradora)){
+					if(seguradora.transferirSeguro(nomeClienteOrigem, nomeClienteDestino)){
+						System.out.println("Seguro transferido!");
 						break;
 					}
 				}
-				// se não achou o nome
-				System.out.println("Seguradora não encontrada");
+				System.out.println("Erro ao transferir seguro");
+				break;
+			case CALCULAR_RECEITA:
+				System.out.println("Receita da seguradora " + nomeSeguradora + ": " + seguradora.calcularReceita());
 				break;
 			case SAIR:
 		}
 	}
 	
-	public static void executarOpcaoSubMenu(SubmenuOpcoes opSubmenu) {
+	public static void executarOpcaoSubMenu(SubmenuOpcoes opSubmenu, Seguradora seguradora) {
+		Scanner scanner = new Scanner(System.in);
 		switch(opSubmenu) {
 		case CADASTRAR_CLIENTE:
 			System.out.println("Chamar metodo cadastrar cliente");
@@ -122,16 +147,21 @@ public class Main {
 			System.out.println("Chamar metodo cadastrar seguradora");
 			break;
 		case LISTAR_CLIENTES:
-			System.out.println("Chamar metodo listar clientes");
+			seguradora.listarClientes("todos");
 			break;
 		case LISTAR_SINISTROS:
-			System.out.println("Chamar metodo listar sinistros");
+			seguradora.listarSinistros();
 			break;
 		case LISTAR_VEICULOS:
-			System.out.println("Chamar metodo listar veiculos");
+			seguradora.listarVeiculos();
 			break;
 		case EXCLUIR_CLIENTE:
-			System.out.println("Chamar metodo excluir cliente");
+			System.out.println("Digite o CPF ou CNPJ do cliente: ");
+			String cpf_cnpj = scanner.nextLine();
+			if(seguradora.removerCliente(cpf_cnpj))
+				System.out.println("Cliente removido");
+			else
+				System.out.println("Cliente não encontrado");
 			break;
 		case EXCLUIR_VEICULO:
 			System.out.println("Chamar metodo excluir veiculo");
@@ -145,12 +175,12 @@ public class Main {
 	}
 	
 	//executa os submenus: exibição do menu, leitura da opção e execução dos métodos
-	private static void executarSubmenu(MenuOpcoes op) {
+	private static void executarSubmenu(MenuOpcoes op, Seguradora seguradora) {
 		SubmenuOpcoes opSubmenu;
 		do {
 			exibirSubmenu(op);
 			opSubmenu = lerOpcaoSubmenu(op);
-			executarOpcaoSubMenu(opSubmenu);
+			executarOpcaoSubMenu(opSubmenu, seguradora);
 		}while(opSubmenu != SubmenuOpcoes.VOLTAR);
 	}
 	
