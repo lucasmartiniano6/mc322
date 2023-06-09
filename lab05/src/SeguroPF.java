@@ -5,9 +5,9 @@ public class SeguroPF extends Seguro{
     private Veiculo veiculo;
     private ClientePF cliente;
 
-    public SeguroPF(int id, Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
-            ArrayList<Condutor> listacondutores, double valorMensal, Veiculo veiculo, ClientePF cliente) {
-        super(id, dataInicio, dataFim, seguradora, listaSinistros, listacondutores, valorMensal);
+    public SeguroPF(Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
+            ArrayList<Condutor> listacondutores, Veiculo veiculo, ClientePF cliente) {
+        super(dataInicio, dataFim, seguradora, listaSinistros, listacondutores);
         this.veiculo = veiculo;
         this.cliente = cliente;
     }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Seguradora {
     private final String cnpj;
@@ -18,38 +19,67 @@ public class Seguradora {
         this.email = email;
         this.listaClientes = listaClientes;
         this.listaSeguros = listaSeguros;
-    }
-
-    public boolean cadastrarCliente(Cliente cliente){
-        // Adiciona Cliente na lista de clientes da seguradora
-        for(Cliente c: listaClientes){
-            if(c.equals(cliente))
-                return false;
+    }   
+    
+    public void listarClientes(){
+        for (Cliente cliente : listaClientes) {
+            System.out.println(cliente);
         }
-        listaClientes.add(cliente);
+    }
+    
+    public boolean gerarSeguro(Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
+            ArrayList<Condutor> listacondutores, Veiculo veiculo, ClientePF cliente){
+        // Gerar seguro de Cliente PF
+        Seguro seguro = new SeguroPF(dataInicio, dataFim, seguradora, listaSinistros, listacondutores, veiculo, cliente);
+        // Adicionar seguro na lista de seguros
+        for(Seguro s: listaSeguros){
+            if(s.equals(seguro)){
+                // Seguro já existe
+                return false;
+            }
+        }
+        seguro.calcularValor();
+        listaSeguros.add(seguro);
         return true;
     }
     
-    public boolean removerCliente(String cliente_str){
-        // Remover Cliente da lista de clientes da seguradora
-        // cliente_str pode ser CPF ou CNPJ
-        for(Cliente c: listaClientes){
-            if(c instanceof ClientePF){
-                if(((ClientePF) c).getCPF().equals(cliente_str)){
-                    listaClientes.remove(c);
-                    return true;
-                }
+    public boolean gerarSeguro(Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
+            ArrayList<Condutor> listacondutores, Frota frota, ClientePJ cliente){
+        // Gerar seguro de Cliente PJ
+        Seguro seguro = new SeguroPJ(dataInicio, dataFim, seguradora, listaSinistros, listacondutores, frota, cliente);
+        // Adicionar seguro na lista de seguros
+        for(Seguro s: listaSeguros){
+            if(s.equals(seguro)){
+                // Seguro já existe
+                return false;
             }
-            else if(c instanceof ClientePJ){
-                if(((ClientePJ) c).getCNPJ().equals(cliente_str)){
-                    listaClientes.remove(c);
-                    return true;
-                }
+        }
+        seguro.calcularValor();
+        listaSeguros.add(seguro);
+        return true;
+    }
+
+    public boolean cancelarSeguro(Seguro seguro){
+        for(Seguro s: listaSeguros){
+            if(s.getId() == seguro.getId()){
+                listaSeguros.remove(s);
+                return true;
             }
         }
         return false;
     }
-    
+
+    public boolean cadastrarCliente(Cliente cliente){
+        for(Cliente c: listaClientes){
+            if(c.equals(cliente)){
+                // Cliente já existe
+                return false;
+            }
+        }
+        listaClientes.add(cliente);
+        return true;
+    }
+
     public boolean removerCliente(Cliente cliente){
         for(Cliente c: listaClientes){
             if(c.equals(cliente)){
@@ -59,37 +89,47 @@ public class Seguradora {
         }
         return false;
     }
-    
-    public void listarClientes(String tipoCliente){
-        // tipoCliente pode ser "PF", "PJ" ou todos
-        if(tipoCliente.equals("PF")){
-            for(Cliente c: listaClientes){
-                if(c instanceof ClientePF)
-                    System.out.println(c);
+
+    public ArrayList<Seguro> getSegurosPorCliente(Cliente cliente){
+        ArrayList<Seguro> seguros = new ArrayList<Seguro>();
+        for(Seguro s: listaSeguros){
+            if(s instanceof SeguroPF){
+                if(((SeguroPF) s).getCliente().equals(cliente)){
+                    seguros.add(s);
+                }
+            }else if(s instanceof SeguroPJ){
+                if(((SeguroPJ) s).getCliente().equals(cliente)){
+                    seguros.add(s);
+                }
             }
         }
-        else if(tipoCliente.equals("PJ")){
-            for(Cliente c: listaClientes){
-                if(c instanceof ClientePJ)
-                    System.out.println(c);
+        return seguros;
+    }
+
+    public ArrayList<Sinistro> getSinistrosPorCliente(Cliente cliente){
+        ArrayList<Sinistro> sinistros = new ArrayList<Sinistro>();
+        for(Seguro s: listaSeguros){
+            if(s instanceof SeguroPF){
+                if(((SeguroPF) s).getCliente().equals(cliente)){
+                    sinistros.addAll(s.getListaSinistros());
+                }
+            }else if(s instanceof SeguroPJ){
+                if(((SeguroPJ) s).getCliente().equals(cliente)){
+                    sinistros.addAll(s.getListaSinistros());
+                }
             }
         }
-        else{
-            for(Cliente c: listaClientes){
-                System.out.println(c);
-            }
-        }
+        return sinistros;
     }
 
     public double calcularReceita(){
         double receita = 0;
         for(Seguro s: listaSeguros){
-            s.calcularValor();
-            receita += s.getValorMensal();
+            receita += s.calcularValor();
         }
         return receita;
     }
-    
+
     public String getCnpj() {
         return cnpj;
     }
@@ -147,4 +187,5 @@ public class Seguradora {
         return "Seguradora [cnpj=" + cnpj + ", nome=" + nome + ", telefone=" + telefone + ", endereco=" + endereco
                 + ", email=" + email + ", listaClientes=" + listaClientes + ", listaSeguros=" + listaSeguros + "]";
     }
+
 } 

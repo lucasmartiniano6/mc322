@@ -5,9 +5,9 @@ public class SeguroPJ extends Seguro {
     Frota frota;
     ClientePJ cliente;
 
-    public SeguroPJ(int id, Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
-            ArrayList<Condutor> listacondutores, double valorMensal, Frota frota, ClientePJ cliente) {
-        super(id, dataInicio, dataFim, seguradora, listaSinistros, listacondutores, valorMensal);
+    public SeguroPJ(Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
+            ArrayList<Condutor> listacondutores, Frota frota, ClientePJ cliente) {
+        super(dataInicio, dataFim, seguradora, listaSinistros, listacondutores);
         this.frota = frota;
         this.cliente = cliente;
     }

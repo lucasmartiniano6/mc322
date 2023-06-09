@@ -11,15 +11,14 @@ public abstract class Seguro {
     private ArrayList<Condutor> listacondutores;
     private double valorMensal;
 
-    public Seguro(int id, Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
-            ArrayList<Condutor> listacondutores, double valorMensal) {
+    public Seguro(Date dataInicio, Date dataFim, Seguradora seguradora, ArrayList<Sinistro> listaSinistros,
+            ArrayList<Condutor> listacondutores) {
         this.id = gerarIdUnico();
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.seguradora = seguradora;
         this.listaSinistros = listaSinistros;
         this.listacondutores = listacondutores;
-        this.valorMensal = valorMensal;
     }
 
     public boolean desautorizarCondutor(Condutor condutor){
