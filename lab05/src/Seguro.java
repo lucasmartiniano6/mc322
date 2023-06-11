@@ -45,6 +45,7 @@ public abstract class Seguro {
     public boolean gerarSinistro(Date data, String endereco, Condutor condutor, Seguro seguro){
         Sinistro sinistro = new Sinistro(data, endereco, condutor, seguro);
         listaSinistros.add(sinistro);
+        condutor.adicionarSinistro(sinistro);
         return true;
     }
 

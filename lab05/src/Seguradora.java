@@ -59,6 +59,17 @@ public class Seguradora {
         return true;
     }
 
+    public boolean cadastrarSeguro(Seguro seguro){
+        for(Seguro s: listaSeguros){
+            if(s.equals(seguro)){
+                // Seguro já existe
+                return false;
+            }
+        }
+        listaSeguros.add(seguro);
+        return true;
+    }
+
     public boolean cancelarSeguro(Seguro seguro){
         for(Seguro s: listaSeguros){
             if(s.getId() == seguro.getId()){

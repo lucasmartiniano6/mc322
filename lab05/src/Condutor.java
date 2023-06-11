@@ -10,15 +10,14 @@ public class Condutor {
     private Date dataNasc;
     private ArrayList<Sinistro> listaSinistros;
 
-    public Condutor(String cpf, String nome, String telefone, String endereco, String email, Date dataNasc,
-            ArrayList<Sinistro> listaSinistros) {
+    public Condutor(String cpf, String nome, String telefone, String endereco, String email, Date dataNasc) {
         this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
         this.endereco = endereco;
         this.email = email;
         this.dataNasc = dataNasc;
-        this.listaSinistros = listaSinistros;
+        this.listaSinistros = new ArrayList<Sinistro>();
     }
 
     public void adicionarSinistro(Sinistro sinistro){

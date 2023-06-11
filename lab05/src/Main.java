@@ -59,15 +59,16 @@ public class Main {
 	private static void executarOpcaoMenuExterno(MenuOpcoes op, ArrayList<Seguradora> listaSeguradoras) {
 		Scanner scanner = new Scanner(System.in);
 		Seguradora seguradora = null;
-		String nomeSeguradora;
+		String cnpjSeguradora;
 		do{
-			System.out.println("Digite o nome da seguradora: ");
-			nomeSeguradora = scanner.nextLine();
+			System.out.println("Digite o CNPJ da seguradora: ");
+			cnpjSeguradora = scanner.nextLine();
 			for(Seguradora s: listaSeguradoras)
-				if((s.getNome()).equals(nomeSeguradora))
+				if((s.getCnpj()).equals(cnpjSeguradora)){
 					seguradora = s;
-			if(seguradora==null)
-				System.out.println("Seguradora [" + nomeSeguradora + "] não encontrada");
+					break;
+				}
+			System.out.println("Seguradora [" + cnpjSeguradora + "] não encontrada");
 		}while(seguradora == null);
 
 		switch(op) {
@@ -89,46 +90,11 @@ public class Main {
 					System.out.println("Nome inválido, digite novamente: ");
 					nomeCliente = scanner.nextLine();
 				}
-				boolean ok = false;
-				for(Cliente c: seguradora.getListaClientes()){
-					if((c.getNome()).equals(nomeCliente)){
-						for(Veiculo v: c.getListaVeiculos()){
-							if((v.getPlaca()).equals(placaVeiculo)){
-								seguradora.gerarSinistro(dataSinistro, enderecoSinistro, seguradora, v, c);
-								System.out.println("Sinistro gerado!");
-								ok = true;
-								break;
-							}
-						}
-					}
-				}
-				if(!ok){
-					System.out.println("Erro ao gerar sinistro");
-				}
 				break;
 			case TRANSFERIR_SEGURO:
-				System.out.println("Nome do cliente de origem: ");
-				String nomeClienteOrigem = scanner.nextLine();
-				while(!Validacao.validaNome(nomeClienteOrigem)){
-					System.out.println("Nome inválido, digite novamente: ");
-					nomeClienteOrigem = scanner.nextLine();
-				}
-				System.out.println("Nome do cliente de destino: ");
-				String nomeClienteDestino = scanner.nextLine();
-				while(!Validacao.validaNome(nomeClienteDestino)){
-					System.out.println("Nome inválido, digite novamente: ");
-					nomeClienteDestino = scanner.nextLine();
-				}
-				if((seguradora.getNome()).equals(nomeSeguradora)){
-					if(seguradora.transferirSeguro(nomeClienteOrigem, nomeClienteDestino)){
-						System.out.println("Seguro transferido!");
-						break;
-					}
-				}
-				System.out.println("Erro ao transferir seguro");
 				break;
 			case CALCULAR_RECEITA:
-				System.out.println("Receita da seguradora " + nomeSeguradora + ": " + seguradora.calcularReceita());
+				System.out.println("Receita da seguradora " + cnpjSeguradora + ": " + seguradora.calcularReceita());
 				break;
 			case SAIR:
 		}
@@ -147,21 +113,12 @@ public class Main {
 			System.out.println("Chamar metodo cadastrar seguradora");
 			break;
 		case LISTAR_CLIENTES:
-			seguradora.listarClientes("todos");
 			break;
 		case LISTAR_SINISTROS:
-			seguradora.listarSinistros();
 			break;
 		case LISTAR_VEICULOS:
-			seguradora.listarVeiculos();
 			break;
 		case EXCLUIR_CLIENTE:
-			System.out.println("Digite o CPF ou CNPJ do cliente: ");
-			String cpf_cnpj = scanner.nextLine();
-			if(seguradora.removerCliente(cpf_cnpj))
-				System.out.println("Cliente removido");
-			else
-				System.out.println("Cliente não encontrado");
 			break;
 		case EXCLUIR_VEICULO:
 			System.out.println("Chamar metodo excluir veiculo");
@@ -196,6 +153,12 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws ParseException{
+		// Instanciar Seguradoras
+		ArrayList<Seguradora> listaSeguradoras = new ArrayList<Seguradora>();
+		ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+		ArrayList<Seguro> listaSeguros = new ArrayList<Seguro>();
+		Seguradora seguradora1 = new Seguradora("24.185.819/0001-39", "Seguradora1", "3325-0221", "Av. Maxwell", "@gmail.com", listaClientes, listaSeguros);
+		listaSeguradoras.add(seguradora1);
 		// Instanciar 2 veículos
 		Veiculo veiculo1 = new Veiculo("ABC-1234", "Fiat", "Uno", 2010);
 		Veiculo veiculo2 = new Veiculo("ABC-4321", "Ford", "Ka", 2012);
@@ -203,44 +166,80 @@ public class Main {
 		ArrayList<Veiculo> listaVeiculos1 = new ArrayList<Veiculo>();
 		listaVeiculos1.add(veiculo1);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date dataLicenca = sdf.parse("01/01/2010");
 		Date dataNascimento = sdf.parse("15/06/2004");
-		ClientePF clientePF1 = new ClientePF("Joao", "Av 1", listaVeiculos1, "074.581.234-19", "M", dataLicenca, "Superior", dataNascimento, "A");
-		// Instanciar ClientePJ
+		ClientePF clientePF1 = new ClientePF("Joao", "98821628", "Av. 1", "074.581.234-19", "M", "Superior", dataNascimento, listaVeiculos1);
+		// Instanciar Seguro PF
+		Date dataInicio = sdf.parse("15/06/2019");
+		Date dataFim = sdf.parse("15/06/2023");
+		ArrayList<Sinistro> listaSinistros1 = new ArrayList<Sinistro>();
+		ArrayList<Condutor> listaCondutores1 = new ArrayList<Condutor>();
+		seguradora1.gerarSeguro(dataInicio, dataFim, seguradora1, listaSinistros1, listaCondutores1, veiculo1, clientePF1);
+		Seguro seguroPF1 = seguradora1.getListaSeguros().get(0);
+		// Instanciar Frota
 		ArrayList<Veiculo> listaVeiculos2 = new ArrayList<Veiculo>();
 		listaVeiculos2.add(veiculo2);
+		Frota frota = new Frota(listaVeiculos2);
+		// Instanciar ClientePJ
+		ArrayList<Frota> listaFrota = new ArrayList<Frota>();
+		listaFrota.add(frota);
 		Date dataFundacao = sdf.parse("01/01/2000");
-		ClientePJ clientePJ1 = new ClientePJ("Empresa", "Av 2", listaVeiculos2, "81.788.124/0001-85", dataFundacao, 15);
-		// Instanciar Seguradoras
-		ArrayList<Seguradora> listaSeguradoras = new ArrayList<Seguradora>();
-		ArrayList<Sinistro> listaSinistros1 = new ArrayList<Sinistro>();
-		ArrayList<Cliente> listaClientes1 = new ArrayList<Cliente>();
-		Seguradora seguradora1 = new Seguradora("Seguradora 1", "1111-1111", "@seg1.com", "Av 3", listaSinistros1, listaClientes1);
-		listaSeguradoras.add(seguradora1);
-		// Cadastrar clientes na primeira seguradora
-		if(listaSeguradoras.get(0).cadastrarCliente(clientePF1))
-			System.out.println("Cliente cadastrado");
-		else
-			System.out.println("Cliente já cadastrado");
+		ClientePJ clientePJ = new ClientePJ("Empresa", "82988216219", "Av.2", "81.788.124/0001-85", dataFundacao, 10, listaFrota);
+		// Instanciar Seguro PJ
+		ArrayList<Sinistro> listaSinistros2 = new ArrayList<Sinistro>();
+		ArrayList<Condutor> listaCondutores2 = new ArrayList<Condutor>();
+		seguradora1.gerarSeguro(dataInicio, dataFim, seguradora1, listaSinistros2, listaCondutores2, frota, clientePJ);
+		Seguro seguroPJ = seguradora1.getListaSeguros().get(1);
+		// Instanciar Condutores
+		Condutor condutor1 = new Condutor("401.868.750-88", "Lucas", "1212-1212", "Av. Br", "@email.com", dataNascimento);
+		Condutor condutor2 = new Condutor("807.750.790-57", "Davi", "3434-1212", "Av. Br", "@email.com", dataNascimento);
+		// Gerar Sinistros
+		seguroPF1.autorizarCondutor(condutor1);
+		seguroPF1.gerarSinistro(sdf.parse("15/06/2020"), "Rua 1", condutor1, seguroPF1);
 
-		if(listaSeguradoras.get(0).cadastrarCliente(clientePJ1))
-			System.out.println("Cliente cadastrado");
-		else
-			System.out.println("Cliente já cadastrado");
-		// Gerar sinistros
-		listaSeguradoras.get(0).gerarSinistro("18/05/2023", "Av. Maxwell", listaSeguradoras.get(0), veiculo1, clientePF1);
-		listaSeguradoras.get(0).gerarSinistro("15/05/2023", "Av. Tartaruga", listaSeguradoras.get(0), veiculo2, clientePJ1);
-		// Chamar metodos da Seguradora
-		listaSeguradoras.get(0).listarClientes("PF");
-		listaSeguradoras.get(0).vizualizarSinistro("074.581.234-19");
-		listaSeguradoras.get(0).listarSinistros();
-		// Atualizar e calcular preco seguro
+		seguroPJ.autorizarCondutor(condutor2);
+		seguroPJ.gerarSinistro(sdf.parse("22/02/2021"), "Av. 7", condutor2, seguroPJ);
+		// Apresentando detalhes dos objetos
+		System.out.println(seguradora1);
+		System.out.println(clientePF1);
+		System.out.println(clientePJ);
+		System.out.println(seguroPF1);
+		System.out.println(seguroPJ);
+		System.out.println(condutor1);
+		System.out.println(veiculo1);
+		System.out.println(seguroPF1.getListaSinistros().get(0));
+		System.out.println(frota);
+
+		// Chamar metodos do Sistema de Seguradora
+
+		// Cadastrar e remover clientes
+		seguradora1.removerCliente(clientePF1);
+		seguradora1.cadastrarCliente(clientePF1);
+		// Mostrar Seguros por cliente e sinistros por cliente
+		System.out.println(seguradora1.getSegurosPorCliente(clientePJ));
+		System.out.println(seguradora1.getSinistrosPorCliente(clientePJ));
+		// Cadastrar e cancelar seguro
+		seguradora1.cancelarSeguro(seguroPJ);
+		seguradora1.cadastrarSeguro(seguroPJ);
+		// Calcular receita de cada seguradora
 		for(Seguradora seg: listaSeguradoras){
-			for(Cliente cliente: seg.getListaClientes()){
-				seg.calcularPrecoSeguroCliente(cliente);
-			}
 			System.out.println(seg.getNome() + " tem como receita: " + seg.calcularReceita());
 		}
+		// Cadastrar veiculo na frota
+		clientePJ.atualizarFrota(frota, veiculo2);
+		System.out.println(clientePJ.getVeiculosPorFrota(frota));
+		// Remover veiculo na frota 
+		clientePJ.atualizarFrota(frota, veiculo2);
+		// Remover frota
+		clientePJ.atualizarFrota(frota);
+		// Cadastrar frota
+		clientePJ.cadastrarFrota(listaVeiculos2);
+		// Cadastrar e remover veiculo
+		clientePF1.cadastrarVeiculo(veiculo2);
+		clientePF1.removerVeiculo(veiculo2);
+		// Manipular condutores
+		seguroPF1.autorizarCondutor(condutor1);
+		seguroPF1.desautorizarCondutor(condutor1);
+		seguroPF1.calcularValor();
 
 		// Iniciar menu de operacoes
 		iniciarMenu(listaSeguradoras);
