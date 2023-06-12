@@ -51,14 +51,14 @@ public class ClientePJ extends Cliente{
         return false;
     }
 
-    public boolean getVeiculosPorFrota(Frota frota){
+    public ArrayList<Veiculo> getVeiculosPorFrota(Frota frota){
+        ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
         for(Frota f : listaFrota){
             if(f.getCode().equals(frota.getCode())){
-                System.out.println(f.getListaVeiculos());
-                return true;
+                return listaVeiculos = f.getListaVeiculos();
             }
         }
-        return false;
+        return listaVeiculos;
     }
 
     public String getCNPJ() {

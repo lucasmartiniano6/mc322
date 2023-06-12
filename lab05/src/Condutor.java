@@ -66,6 +66,6 @@ public class Condutor {
     @Override
     public String toString() {
         return "Condutor [cpf=" + cpf + ", nome=" + nome + ", telefone=" + telefone + ", endereco=" + endereco
-                + ", email=" + email + ", dataNasc=" + dataNasc + ", listaSinistros=" + listaSinistros + "]";
+                + ", email=" + email + ", dataNasc=" + dataNasc;
     }
 }

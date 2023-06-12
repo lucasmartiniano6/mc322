@@ -22,7 +22,6 @@ public enum MenuOpcoes {
 			SubmenuOpcoes.EXCLUIR_SINISTRO,
 			SubmenuOpcoes.VOLTAR}),
 	GERAR_SINISTRO("Gerar Sinistro", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
-	TRANSFERIR_SEGURO("Transferir Seguro", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
 	CALCULAR_RECEITA("Calcular Receita", new SubmenuOpcoes[] {SubmenuOpcoes.VOLTAR}),
 	SAIR("Sair", new SubmenuOpcoes[] {});
 	

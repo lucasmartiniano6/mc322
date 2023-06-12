@@ -57,6 +57,9 @@ public class Main {
 	
 	//executar opções do menu externo
 	private static void executarOpcaoMenuExterno(MenuOpcoes op, ArrayList<Seguradora> listaSeguradoras) {
+		if(op == MenuOpcoes.SAIR)
+			return;
+
 		Scanner scanner = new Scanner(System.in);
 		Seguradora seguradora = null;
 		String cnpjSeguradora;
@@ -68,7 +71,8 @@ public class Main {
 					seguradora = s;
 					break;
 				}
-			System.out.println("Seguradora [" + cnpjSeguradora + "] não encontrada");
+			if(seguradora == null)
+				System.out.println("Seguradora [" + cnpjSeguradora + "] não encontrada");
 		}while(seguradora == null);
 
 		switch(op) {
@@ -84,14 +88,38 @@ public class Main {
 				String enderecoSinistro = scanner.nextLine();
 				System.out.println("Placa do veiculo: ");
 				String placaVeiculo = scanner.nextLine();
-				System.out.println("Nome do cliente: ");
-				String nomeCliente = scanner.nextLine();
-				while(!Validacao.validaNome(nomeCliente)){
-					System.out.println("Nome inválido, digite novamente: ");
-					nomeCliente = scanner.nextLine();
+				System.out.println("CPF do condutor: ");
+				String cpf = scanner.nextLine();
+				Seguro seguro = null;
+				for(Seguro s: seguradora.getListaSeguros()){
+					if(s instanceof SeguroPF){
+						if(((SeguroPF)s).getVeiculo().getPlaca().equals(placaVeiculo)){
+							seguro = (SeguroPF)s;
+						}
 				}
-				break;
-			case TRANSFERIR_SEGURO:
+					if(s instanceof SeguroPJ){
+						for(Veiculo v: ((SeguroPJ)s).getFrota().getListaVeiculos()){
+							if(v.getPlaca().equals(placaVeiculo))
+								seguro = (SeguroPJ)s;
+						}
+					}
+				}
+				if(seguro == null){
+					System.out.println("Veiculo não encontrado");
+					break;
+				}
+				for(Condutor c: seguro.getListacondutores()){
+					if(c.getCpf().equals(cpf)){
+						try{
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+							Date data = sdf.parse(dataSinistro);
+							seguro.gerarSinistro(data, enderecoSinistro, c, seguro);
+							System.out.println("Sinistro gerado com sucesso");
+						}catch(ParseException e){
+							System.out.println("Data inválida");
+						}
+					}
+				}
 				break;
 			case CALCULAR_RECEITA:
 				System.out.println("Receita da seguradora " + cnpjSeguradora + ": " + seguradora.calcularReceita());
@@ -105,6 +133,8 @@ public class Main {
 		switch(opSubmenu) {
 		case CADASTRAR_CLIENTE:
 			System.out.println("Chamar metodo cadastrar cliente");
+			String nome = scanner.nextLine();
+			System.out.println(nome);
 			break;
 		case CADASTRAR_VEICULO:
 			System.out.println("Chamar metodo cadastrar veiculo");
@@ -198,6 +228,7 @@ public class Main {
 
 		seguroPJ.autorizarCondutor(condutor2);
 		seguroPJ.gerarSinistro(sdf.parse("22/02/2021"), "Av. 7", condutor2, seguroPJ);
+
 		// Apresentando detalhes dos objetos
 		System.out.println(seguradora1);
 		System.out.println(clientePF1);
@@ -225,7 +256,7 @@ public class Main {
 			System.out.println(seg.getNome() + " tem como receita: " + seg.calcularReceita());
 		}
 		// Cadastrar veiculo na frota
-		clientePJ.atualizarFrota(frota, veiculo2);
+		clientePJ.atualizarFrota(frota, veiculo1);
 		System.out.println(clientePJ.getVeiculosPorFrota(frota));
 		// Remover veiculo na frota 
 		clientePJ.atualizarFrota(frota, veiculo2);
